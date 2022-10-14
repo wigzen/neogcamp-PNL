@@ -1,42 +1,48 @@
-const initailPrice = document.getElementById("init")
-const NoOfStocks = document.getElementById("stock")
+const initialPrice = document.getElementById("init")
+const quantityStocks = document.getElementById("stock")
 const currentPrice =document.getElementById("current")
-const output = document.getElementById("output")
-const button = document.getElementById("btn")
+const outputEl = document.getElementById("output")
+const submitBtn = document.getElementById("btn")
 
 
-button.addEventListener('click',function(){
+function calculateProfitOrLoss(initial, quantity, current) {
+  if (initial > current) {
+    var loss = (initial - current) * quantity;
+    var lossPercentage = (loss / (initial * quantity)) * 100;
+    showOutput(
+      "Your loss is " +
+        loss.toFixed(2) +
+        " and the loss percentage is " +
+        lossPercentage.toFixed(2) +
+        " % 🤕"
+    );
+  } else if (current > initial) {
+    var profit = (current - initial) * quantity;
+    var profitPercentage = (profit / (initial * quantity)) * 100;
+    showOutput(
+      "Your profit is " +
+        profit.toFixed(2) +
+        " and the profit percentage is " +
+        profitPercentage.toFixed(2) +
+        " % 💸"
+    );
+  } else {
+    showOutput("No pain no gain but also no gain no pain!");
+  }
+}
 
-    let initial = Number(initailPrice.value);
-    let quantity = Number(NoOfStocks.value)
-    let current = Number(currentPrice.value)
+function submitHandler(ip, qty, curr) {
+  var ip = Number(initialPrice.value);
+  var qty = Number(quantityStocks.value);
+  var curr = Number(currentPrice.value);
+  calculateProfitOrLoss(ip, qty, curr);
 
-    calculatePNL(initial,quantity,current);
-    }
-    )
+  if (ip <= 0 || qty <= 0 || curr <= -1) {
+    showOutput("Enter Valid Data❌");
+  }
+}
 
-
-
-    function calculatePNL(initial, quantity, current) {
-        if (initial > current) {
-          let loss = (initial - current) * quantity;
-          let lossPercentage = (loss / initial) * 100;
-      
-          showOutput(
-            `Hey, the loss is ${loss} and the percent is ${lossPercentage}%`
-          );
-        } else if (current > initial) {
-          let profit = (current - initial) * quantity;
-          let profitPercentage = (profit / initial) * 100;
-      
-          showOutput(
-            `Hey, the profit is ${profit} and the percent is ${profitPercentage}%`
-          );
-        } else {
-          showOutput(`No pain no gain and no gain no pain`);
-        }
-      }
-      
-      function showOutput(message) {
-        output.textContent = message;
-      }
+function showOutput(message) {
+  outputEl.innerText = message;
+}
+submitBtn.addEventListener("click", submitHandler);
